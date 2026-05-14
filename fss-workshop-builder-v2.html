@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSS Workshop Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1C1C14;
+    --olive: #4A4A2E;
+    --olive-mid: #5C5C3D;
+    --taupe: #B8AC9A;
+    --sand: #D4C9B5;
+    --cream: #F2EDE4;
+    --gold: #C4A06A;
+    --gold-light: #D9BC8E;
+    --rust: #7A3B1E;
+    --green: #6BBF8E;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #13130E;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--cream);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--ink);
+    border-bottom: 1px solid rgba(196,160,106,0.15);
+    padding: 20px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--cream);
+  }
+
+  header h1 span { color: var(--gold); font-style: italic; }
+
+  .header-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    border: 1px solid rgba(184,172,154,0.25);
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* MISSION STATEMENT */
+  .mission-box {
+    background: var(--olive);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mission-box::before {
+    content: '"';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12rem;
+    color: rgba(0,0,0,0.1);
+    position: absolute;
+    top: -20px;
+    left: 16px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .mission-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .mission-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.6;
+    position: relative;
+  }
+
+  /* INTRO BOX */
+  .intro-box {
+    background: var(--ink);
+    border: 1px solid rgba(196,160,106,0.15);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+  }
+
+  .intro-box h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .intro-box p {
+    font-size: 0.88rem;
+    color: var(--taupe);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .generate-btn {
+    display: block;
+    width: 100%;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    border-radius: 8px;
+    padding: 14px 24px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .generate-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .generate-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* STATUS */
+  .status-bar {
+    display: none;
+    background: var(--olive-mid);
+    color: var(--cream);
+    text-align: center;
+    padding: 10px;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    border-radius: 6px;
+    margin-bottom: 24px;
+  }
+
+  .status-bar.show { display: block; }
+
+  /* SECTION CARDS */
+  .section-card {
+    background: var(--ink);
+    border: 1px solid rgba(184,172,154,0.1);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .section-card.visible { opacity: 1; transform: translateY(0); }
+
+  .section-header {
+    background: rgba(255,255,255,0.03);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid rgba(184,172,154,0.08);
+  }
+
+  .section-num {
+    background: var(--olive-mid);
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-style: italic;
+  }
+
+  .section-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--cream);
+  }
+
+  .section-header .timing {
+    margin-left: auto;
+    font-size: 0.7rem;
+    color: var(--olive-mid);
+    background: rgba(92,92,61,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: 0.08em;
+  }
+
+  .section-body { padding: 24px; }
+
+  /* TABS */
+  .tab-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(184,172,154,0.15);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    color: var(--taupe);
+    font-family: 'Jost', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active { background: var(--olive-mid); color: var(--cream); border-color: var(--olive-mid); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .content-block {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(184,172,154,0.08);
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--sand);
+    white-space: pre-wrap;
+    min-height: 60px;
+  }
+
+  .content-block.loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--olive-mid);
+    font-style: italic;
+    font-size: 0.82rem;
+  }
+
+  .slide-box {
+    background: var(--ink);
+    border: 1px solid rgba(196,160,106,0.15);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-size: 0.88rem;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    color: var(--sand);
+  }
+
+  .slide-box strong {
+    color: var(--gold);
+    display: block;
+    margin-bottom: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+  }
+
+  .dots {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  .dots span {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+    opacity: 0.5;
+  }
+
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  .copy-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid rgba(184,172,154,0.18);
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { color: var(--gold); border-color: var(--gold); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+  /* PITCH CARD */
+  .pitch-card {
+    background: var(--olive);
+    border-radius: 12px;
+    padding: 32px;
+    margin-top: 32px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pitch-card::before {
+    content: '✦';
+    font-size: 8rem;
+    color: rgba(0,0,0,0.08);
+    position: absolute;
+    right: 20px;
+    top: -10px;
+    pointer-events: none;
+  }
+
+  .pitch-card.visible { opacity: 1; transform: translateY(0); }
+
+  .pitch-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .pitch-content {
+    background: rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--cream);
+    white-space: pre-wrap;
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 16px 20px; }
+    .container { padding: 28px 16px 60px; }
+    .intro-box, .mission-box { padding: 20px; }
+    .section-body { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>FSS <span>Workshop Builder</span></h1>
+  <div class="header-tag">Feminine Strength Co.</div>
+</header>
+
+<div class="container">
+
+  <div class="mission-box">
+    <div class="mission-label">The real message</div>
+    <div class="mission-text">"We need support, and we need to learn, and we need to understand ourselves — so we can move in a direction every day that best suits us. Not live in a label. Just move forward."</div>
+  </div>
+
+  <div class="intro-box">
+    <h2>Feminine Strength Society — Intro Workshop</h2>
+    <p>This workshop is for the woman who is stuck, tried everything, and is done being defined by her age or stage. It's built around your real message — self-understanding as the path forward, strength as the vehicle, and community as the anchor. No perimenopause identity. No spiral. Just movement.</p>
+    <button class="generate-btn" id="generateBtn" onclick="buildWorkshop()">✦ Generate Full Workshop</button>
+  </div>
+
+  <div class="status-bar" id="statusBar">
+    <div class="dots" style="display:inline-flex;margin-right:10px"><span></span><span></span><span></span></div>
+    Building your workshop...
+  </div>
+
+  <div id="workshopOutput"></div>
+
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    title: "I See You",
+    timing: "5 min",
+    purpose: "Open by naming exactly who is in the room — not by diagnosis or life stage, but by feeling. Stuck. Tired. Tried everything. Done being defined."
+  },
+  {
+    title: "The Spiral That Keeps You Stuck",
+    timing: "10 min",
+    purpose: "The rabbit hole of over-researching, over-identifying with a label, constantly finding the 'why' — and how that actually makes things harder, not easier. Christin's own experience here."
+  },
+  {
+    title: "What Actually Moves the Needle",
+    timing: "12 min",
+    purpose: "Self-understanding as a daily practice — not a diagnosis to dwell in. Strength training as the clearest, most direct path to feeling like yourself again. The body as a project, not a problem."
+  },
+  {
+    title: "What Changes When You Stop Fighting Yourself",
+    timing: "10 min",
+    purpose: "Results — physical, mental, emotional. What Christin has seen in 10 years of coaching women through this. What changed for her personally. The other side of the spiral."
+  },
+  {
+    title: "What the Feminine Strength Society Is",
+    timing: "8 min",
+    purpose: "The community, the programming, the Compass app — framed as a daily tool for self-understanding and forward movement, not a perimenopause support group."
+  },
+  {
+    title: "Your Next Step",
+    timing: "5 min",
+    purpose: "Low pressure close. The waitlist. One small action. You don't have to figure it all out today — just take the next step."
+  }
+];
+
+const SYSTEM = `You are writing workshop content for Christin Fisher, founder of Feminine Strength Co. She is a certified personal trainer, 52 years old, who has coached women 35+ for over a decade.
+
+Her real message — the one that matters most:
+- Women get trapped defining themselves by their season of life (perimenopause, age, hormones) and it makes things worse, not better
+- The rabbit hole of constantly researching and finding the "why" keeps women stuck
+- Self-understanding as a daily practice — not a diagnosis to dwell in — is the path forward
+- Strength training is the vehicle. Community is the anchor. Moving forward is the goal.
+- She speaks from lived experience and 10 years of coaching observation — NEVER from clinical or hormone expertise
+- She coaches what she lives. She was in the spiral herself. She found her way out through lifting and letting go.
+
+Her voice: warm, direct, honest, occasionally funny, deeply real. No fluff. No toxic positivity. No clinical language. Write like she's in a room with women she genuinely cares about.
+
+CRITICAL: Never use clinical hormone language. Never position her as a hormone expert. Never make perimenopause the identity. The message is about getting unstuck and moving forward — perimenopause is context, not the point.`;
+
+async function callClaude(prompt) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system: SYSTEM,
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+  const data = await res.json();
+  return data.content[0].text;
+}
+
+function makeTabs(id) {
+  return `
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab(this,'${id}-script')">Script</button>
+      <button class="tab-btn" onclick="switchTab(this,'${id}-slide')">Slide Notes</button>
+      <button class="tab-btn" onclick="switchTab(this,'${id}-points')">Talking Points</button>
+    </div>
+    <div id="${id}-script" class="tab-content active">
+      <div class="content-block loading" id="${id}-script-content">
+        <div class="dots"><span></span><span></span><span></span></div> Writing script...
+      </div>
+      <div class="copy-row">
+        <button class="copy-btn" onclick="copyEl('${id}-script-content')">Copy Script</button>
+      </div>
+    </div>
+    <div id="${id}-slide" class="tab-content">
+      <div class="slide-box" id="${id}-slide-content">
+        <div class="dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="copy-row">
+        <button class="copy-btn" onclick="copyEl('${id}-slide-content')">Copy Slide Notes</button>
+      </div>
+    </div>
+    <div id="${id}-points" class="tab-content">
+      <div class="content-block loading" id="${id}-points-content">
+        <div class="dots"><span></span><span></span><span></span></div> Writing talking points...
+      </div>
+      <div class="copy-row">
+        <button class="copy-btn" onclick="copyEl('${id}-points-content')">Copy Points</button>
+      </div>
+    </div>
+  `;
+}
+
+function switchTab(btn, targetId) {
+  const body = btn.closest('.section-body');
+  body.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  body.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(targetId).classList.add('active');
+}
+
+function setContent(id, text, isSlide = false) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (isSlide) {
+    el.innerHTML = `<strong>Slide Layout</strong>${text}`;
+  } else {
+    el.classList.remove('loading');
+    el.textContent = text;
+  }
+}
+
+function copyEl(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+    const btn = el.closest('.tab-content')?.querySelector('.copy-btn');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
+    }
+  });
+}
+
+async function buildWorkshop() {
+  const btn = document.getElementById('generateBtn');
+  const status = document.getElementById('statusBar');
+  const output = document.getElementById('workshopOutput');
+
+  btn.disabled = true;
+  btn.textContent = '✦ Building...';
+  status.classList.add('show');
+  output.innerHTML = '';
+
+  // Build all cards first so they appear immediately
+  SECTIONS.forEach((sec, i) => {
+    const id = `sec${i}`;
+    const card = document.createElement('div');
+    card.className = 'section-card';
+    card.innerHTML = `
+      <div class="section-header">
+        <div class="section-num">${i + 1}</div>
+        <h3>${sec.title}</h3>
+        <span class="timing">${sec.timing}</span>
+      </div>
+      <div class="section-body">${makeTabs(id)}</div>
+    `;
+    output.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), i * 100);
+  });
+
+  // Add pitch card placeholder
+  const pitchCard = document.createElement('div');
+  pitchCard.className = 'pitch-card';
+  pitchCard.innerHTML = `
+    <h3>✦ Waitlist Close</h3>
+    <div class="pitch-content loading" id="pitch-content">
+      <div class="dots"><span></span><span></span><span></span></div> Waiting...
+    </div>
+    <div class="copy-row" style="margin-top:14px">
+      <button class="copy-btn" style="border-color:rgba(242,237,228,0.2);color:rgba(242,237,228,0.5)" onclick="copyEl('pitch-content')">Copy Close</button>
+    </div>
+  `;
+  output.appendChild(pitchCard);
+  setTimeout(() => pitchCard.classList.add('visible'), 200);
+
+  // Generate sequentially — one section at a time to avoid timeouts
+  for (let i = 0; i < SECTIONS.length; i++) {
+    const sec = SECTIONS[i];
+    const id = `sec${i}`;
+
+    status.innerHTML = `<div class="dots" style="display:inline-flex;margin-right:10px"><span></span><span></span><span></span></div> Writing section ${i + 1} of ${SECTIONS.length}: ${sec.title}`;
+
+    try {
+      // Script first
+      const script = await callClaude(`Write the workshop script for section "${sec.title}" (${sec.timing}). Purpose: ${sec.purpose}
+
+This is a live workshop for women who are stuck, tired, and done being defined by their life stage. Write in Christin's voice — warm, honest, real. Include a moment where she speaks from her own experience. 280-340 words.`);
+      setContent(`${id}-script-content`, script);
+
+      // Then slide notes
+      const slide = await callClaude(`Write slide layout notes for workshop section "${sec.title}". Use this exact format:
+SLIDE TITLE: [short punchy title]
+VISUAL: [what's on screen]
+KEY TEXT: [3-4 bullet points max]
+SPEAKER NOTE: [one reminder sentence for Christin]
+
+Keep language aligned with the message: self-understanding, moving forward, strength. No clinical hormone language.`);
+      setContent(`${id}-slide-content`, slide, true);
+
+      // Then talking points
+      const points = await callClaude(`Write 5 punchy talking points for the workshop section "${sec.title}". Each is one confident sentence Christin can riff from live. Grounded in her experience and message. No fluff. No clinical language.`);
+      setContent(`${id}-points-content`, points);
+
+    } catch (err) {
+      setContent(`${id}-script-content`, 'Something went wrong — click Regenerate to try again.');
+    }
+  }
+
+  // Finally the pitch
+  status.innerHTML = `<div class="dots" style="display:inline-flex;margin-right:10px"><span></span><span></span><span></span></div> Writing your close...`;
+
+  try {
+    const pitch = await callClaude(`Write a 2-minute closing for Christin's free workshop inviting women to join the Feminine Strength Society waitlist.
+
+The close should feel like a natural extension of everything she just shared — not a sales pitch. Warm, genuine, zero pressure. Frame the Society as: a place to keep moving forward together, with monthly programming, community, and the Compass app as a daily self-understanding tool.
+
+The invitation is simple: if this resonated, the waitlist is the next small step. You don't have to figure it all out today.
+
+End with: "The link is in the chat — and I'll see you on the other side."
+
+180-220 words. Her voice throughout.`);
+
+    const pitchEl = document.getElementById('pitch-content');
+    if (pitchEl) {
+      pitchEl.classList.remove('loading');
+      pitchEl.textContent = pitch;
+    }
+  } catch (err) {
+    const pitchEl = document.getElementById('pitch-content');
+    if (pitchEl) pitchEl.textContent = 'Something went wrong — click Regenerate to try again.';
+  }
+
+  status.classList.remove('show');
+  btn.disabled = false;
+  btn.textContent = '✦ Regenerate Workshop';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSC AI Copywriter</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1C1C14;
+    --olive: #4A4A2E;
+    --olive-mid: #5C5C3D;
+    --taupe: #B8AC9A;
+    --sand: #D4C9B5;
+    --cream: #F2EDE4;
+    --gold: #C4A06A;
+    --gold-light: #D9BC8E;
+    --green: #6BBF8E;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #13130E;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--cream);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--ink);
+    border-bottom: 1px solid rgba(196,160,106,0.15);
+    padding: 20px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--cream);
+  }
+
+  header h1 span { color: var(--gold); font-style: italic; }
+
+  .header-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    border: 1px solid rgba(184,172,154,0.25);
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  .main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* HOW IT WORKS */
+  .how-it-works {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .step-card {
+    background: var(--ink);
+    border: 1px solid rgba(184,172,154,0.1);
+    border-radius: 10px;
+    padding: 20px 18px;
+    text-align: center;
+  }
+
+  .step-icon {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+
+  .step-num {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .step-text {
+    font-size: 0.82rem;
+    color: var(--taupe);
+    line-height: 1.55;
+  }
+
+  /* INPUT CARD */
+  .input-card {
+    background: var(--ink);
+    border: 1px solid rgba(184,172,154,0.12);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .input-card-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(184,172,154,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .input-card-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .input-card-label::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .char-count {
+    font-size: 0.7rem;
+    color: var(--olive-mid);
+  }
+
+  textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 20px 24px;
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.75;
+    resize: none;
+    min-height: 160px;
+    outline: none;
+  }
+
+  textarea::placeholder { color: rgba(184,172,154,0.3); }
+
+  /* OPTIONS ROW */
+  .options-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .option-group label {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    margin-bottom: 7px;
+  }
+
+  .option-group select {
+    width: 100%;
+    background: var(--ink);
+    border: 1px solid rgba(184,172,154,0.18);
+    border-radius: 6px;
+    padding: 9px 12px;
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .option-group select:focus { border-color: var(--gold); }
+  .option-group select option { background: var(--ink); }
+
+  /* GENERATE BTN */
+  .write-btn {
+    display: block;
+    width: 100%;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    border-radius: 8px;
+    padding: 15px 24px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    margin-bottom: 24px;
+  }
+
+  .write-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .write-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* OUTPUT */
+  .output-card {
+    background: var(--ink);
+    border: 1px solid rgba(184,172,154,0.12);
+    border-radius: 12px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .output-card.show { display: block; }
+
+  .output-header {
+    padding: 14px 22px;
+    border-bottom: 1px solid rgba(184,172,154,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .output-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .output-platform {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--taupe);
+  }
+
+  /* VERSIONS */
+  .versions-wrap { padding: 20px 22px; }
+
+  .version-block {
+    margin-bottom: 20px;
+    border: 1px solid rgba(184,172,154,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .version-block:last-child { margin-bottom: 0; }
+
+  .version-header {
+    background: rgba(255,255,255,0.02);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(184,172,154,0.06);
+  }
+
+  .version-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--olive-mid);
+  }
+
+  .version-type {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    background: rgba(184,172,154,0.08);
+    padding: 3px 8px;
+    border-radius: 10px;
+  }
+
+  .version-text {
+    padding: 16px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--sand);
+    white-space: pre-wrap;
+    min-height: 40px;
+  }
+
+  .version-text.loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--olive-mid);
+    font-style: italic;
+    font-size: 0.82rem;
+  }
+
+  .version-footer {
+    padding: 10px 16px;
+    border-top: 1px solid rgba(184,172,154,0.06);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid rgba(184,172,154,0.18);
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { color: var(--gold); border-color: var(--gold); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+  .regen-btn {
+    background: transparent;
+    border: 1px solid rgba(184,172,154,0.12);
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--olive-mid);
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.2s;
+    margin-left: auto;
+  }
+
+  .regen-btn:hover { color: var(--taupe); border-color: var(--taupe); }
+
+  /* TIPS */
+  .tips-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .tip-chip {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(184,172,154,0.1);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    color: var(--taupe);
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+
+  .tip-chip:hover { border-color: var(--gold); color: var(--gold); }
+
+  .tips-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--olive-mid);
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .dots {
+    display: inline-flex;
+    gap: 4px;
+    vertical-align: middle;
+  }
+
+  .dots span {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: bounce 1.1s infinite;
+    opacity: 0.5;
+  }
+
+  .dots span:nth-child(2) { animation-delay: 0.18s; }
+  .dots span:nth-child(3) { animation-delay: 0.36s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 16px 20px; }
+    .main { padding: 24px 16px 60px; }
+    .how-it-works { grid-template-columns: 1fr; gap: 8px; }
+    .options-row { grid-template-columns: 1fr; }
+    .step-card { display: flex; align-items: center; gap: 14px; text-align: left; padding: 14px 16px; }
+    .step-icon { font-size: 1.3rem; margin-bottom: 0; flex-shrink: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>FSC <span>AI Copywriter</span></h1>
+  <div class="header-tag">@christin_fisher</div>
+</header>
+
+<div class="main">
+
+  <!-- HOW IT WORKS -->
+  <div class="how-it-works">
+    <div class="step-card">
+      <div class="step-icon">🎙️</div>
+      <div class="step-num">Step 01</div>
+      <div class="step-text">Voice note your idea — raw, unfiltered, however it comes out</div>
+    </div>
+    <div class="step-card">
+      <div class="step-icon">📋</div>
+      <div class="step-num">Step 02</div>
+      <div class="step-text">Paste the transcript below — iPhone auto-transcribes in Notes</div>
+    </div>
+    <div class="step-card">
+      <div class="step-icon">✦</div>
+      <div class="step-num">Step 03</div>
+      <div class="step-text">Get 3 captions in your voice — ready to post</div>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-card">
+    <div class="input-card-header">
+      <div class="input-card-label">Your raw idea or voice note transcript</div>
+      <div class="char-count" id="charCount">0 chars</div>
+    </div>
+    <textarea
+      id="rawInput"
+      placeholder="Paste your voice note transcript here, or just type your idea however it comes out. Messy is fine. That's the point — your raw voice is the asset."
+      oninput="updateCount()"
+    ></textarea>
+  </div>
+
+  <!-- OPTIONS -->
+  <div class="options-row">
+    <div class="option-group">
+      <label>Platform</label>
+      <select id="platform">
+        <option value="instagram">Instagram</option>
+        <option value="tiktok">TikTok</option>
+        <option value="both">Both</option>
+      </select>
+    </div>
+    <div class="option-group">
+      <label>Post Type</label>
+      <select id="postType">
+        <option value="auto">Auto-detect</option>
+        <option value="education">Education</option>
+        <option value="realtalk">Real Talk</option>
+        <option value="proof">Results / Proof</option>
+        <option value="personal">Personal</option>
+        <option value="promo">Soft Promo</option>
+      </select>
+    </div>
+    <div class="option-group">
+      <label>Length</label>
+      <select id="length">
+        <option value="short">Short (under 100 words)</option>
+        <option value="medium" selected>Medium (100–180 words)</option>
+        <option value="long">Long (180+ words)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- STARTER CHIPS -->
+  <div class="tips-row">
+    <div class="tips-label">Or start from a prompt:</div>
+    <div class="tip-chip" onclick="fillPrompt(this)">Something I noticed in my own training this week</div>
+    <div class="tip-chip" onclick="fillPrompt(this)">Why I stopped trying to find the why</div>
+    <div class="tip-chip" onclick="fillPrompt(this)">What 10 years of coaching women has taught me</div>
+    <div class="tip-chip" onclick="fillPrompt(this)">The thing nobody tells you about getting stronger after 40</div>
+    <div class="tip-chip" onclick="fillPrompt(this)">Why I almost didn't show up today — and did anyway</div>
+    <div class="tip-chip" onclick="fillPrompt(this)">What I'd tell myself 10 years ago</div>
+  </div>
+
+  <br>
+
+  <button class="write-btn" id="writeBtn" onclick="writeCaptions()">✦ Write My Captions</button>
+
+  <!-- OUTPUT -->
+  <div class="output-card" id="outputCard">
+    <div class="output-header">
+      <div class="output-label">✦ Your Captions</div>
+      <div class="output-platform" id="outputPlatformLabel"></div>
+    </div>
+    <div class="versions-wrap" id="versionsWrap"></div>
+  </div>
+
+</div>
+
+<script>
+function updateCount() {
+  const len = document.getElementById('rawInput').value.length;
+  document.getElementById('charCount').textContent = `${len} chars`;
+}
+
+function fillPrompt(el) {
+  document.getElementById('rawInput').value = el.textContent.trim();
+  updateCount();
+  document.getElementById('rawInput').focus();
+}
+
+const SYSTEM = `You are the AI copywriter for Christin Fisher, founder of Feminine Strength Co. She is a certified personal trainer, 52 years old, coaching women 35+ in strength training and body recomposition for over a decade.
+
+Her voice: warm, direct, real-talk, occasionally funny, never performative. She speaks from lived experience and 10 years of coaching observation — never from clinical expertise. She was in the research spiral herself and found her way out through lifting. She coaches what she lives.
+
+CRITICAL RULES:
+- Never use clinical hormone language ("hormone-informed", "cycle-synced", "perimenopause programming")
+- Use: "what I've noticed", "in my experience", "what I've seen work", "this season of life", "women in the thick of it"
+- Never sound like a wellness brand — sound like a real woman who lifts and coaches
+- No hashtags unless asked
+- No toxic positivity
+- Never say "ladies", "gals", "queen"
+- End with a question or soft CTA that invites engagement
+- Write like she's talking to one woman, not broadcasting to a crowd`;
+
+async function callClaude(prompt) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system: SYSTEM,
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+  const data = await res.json();
+  return data.content[0].text;
+}
+
+function buildPrompt(raw, platform, postType, length, versionStyle) {
+  const platformDesc = {
+    instagram: "Instagram caption",
+    tiktok: "TikTok video script (spoken word, conversational)",
+    both: "caption that works for both Instagram and TikTok"
+  }[platform];
+
+  const lengthDesc = {
+    short: "under 100 words",
+    medium: "100–180 words",
+    long: "180–250 words"
+  }[length];
+
+  const typeDesc = postType === 'auto'
+    ? "Detect the best post type from the content (education, real talk, personal, proof, or soft promo)."
+    : `Post type: ${postType}.`;
+
+  const styleMap = {
+    punchy: "Make this version punchy and scroll-stopping. Strong hook. Short sentences. High energy.",
+    warm: "Make this version warm and personal. Like she's talking directly to one woman who needs to hear this.",
+    story: "Make this version story-led. Start with a moment or scene, build to the point."
+  };
+
+  return `Here is Christin's raw idea or voice note:
+
+---
+${raw}
+---
+
+Write a ${platformDesc} based on this. ${typeDesc} Length: ${lengthDesc}. ${styleMap[versionStyle]}
+
+Start with a scroll-stopping hook (first line must make someone stop). Write in Christin's voice throughout. End with a question or soft CTA.`;
+}
+
+async function writeCaptions() {
+  const raw = document.getElementById('rawInput').value.trim();
+  if (!raw) {
+    document.getElementById('rawInput').focus();
+    return;
+  }
+
+  const platform = document.getElementById('platform').value;
+  const postType = document.getElementById('postType').value;
+  const length = document.getElementById('length').value;
+  const btn = document.getElementById('writeBtn');
+  const outputCard = document.getElementById('outputCard');
+  const versionsWrap = document.getElementById('versionsWrap');
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="dots" style="display:inline-flex"><span></span><span></span><span></span></div>';
+
+  const platformLabel = { instagram: 'Instagram', tiktok: 'TikTok', both: 'Instagram + TikTok' }[platform];
+  document.getElementById('outputPlatformLabel').textContent = platformLabel;
+
+  const versions = [
+    { key: 'punchy', label: 'Version A', type: 'Punchy & Direct' },
+    { key: 'warm', label: 'Version B', type: 'Warm & Personal' },
+    { key: 'story', label: 'Version C', type: 'Story-Led' }
+  ];
+
+  // Build skeleton
+  versionsWrap.innerHTML = versions.map(v => `
+    <div class="version-block" id="vblock-${v.key}">
+      <div class="version-header">
+        <span class="version-label">${v.label}</span>
+        <span class="version-type">${v.type}</span>
+      </div>
+      <div class="version-text loading" id="vtext-${v.key}">
+        <div class="dots"><span></span><span></span><span></span></div> Writing...
+      </div>
+      <div class="version-footer">
+        <button class="copy-btn" id="vcopy-${v.key}" onclick="copyVersion('${v.key}')">Copy</button>
+        <button class="regen-btn" onclick="regenVersion('${v.key}', '${raw.replace(/'/g, "\\'")}', '${platform}', '${postType}', '${length}')">↻ Rewrite</button>
+      </div>
+    </div>
+  `).join('');
+
+  outputCard.classList.add('show');
+  outputCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Generate sequentially
+  for (const v of versions) {
+    try {
+      const caption = await callClaude(buildPrompt(raw, platform, postType, length, v.key));
+      const el = document.getElementById(`vtext-${v.key}`);
+      el.classList.remove('loading');
+      el.textContent = caption;
+      el.dataset.text = caption;
+    } catch {
+      const el = document.getElementById(`vtext-${v.key}`);
+      el.classList.remove('loading');
+      el.textContent = 'Something went wrong — click Rewrite to try again.';
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✦ Write My Captions';
+}
+
+async function regenVersion(key, raw, platform, postType, length) {
+  const el = document.getElementById(`vtext-${key}`);
+  el.classList.add('loading');
+  el.innerHTML = '<div class="dots"><span></span><span></span><span></span></div> Rewriting...';
+
+  try {
+    const caption = await callClaude(buildPrompt(raw, platform, postType, length, key));
+    el.classList.remove('loading');
+    el.textContent = caption;
+    el.dataset.text = caption;
+  } catch {
+    el.classList.remove('loading');
+    el.textContent = 'Something went wrong — try again.';
+  }
+}
+
+function copyVersion(key) {
+  const el = document.getElementById(`vtext-${key}`);
+  const text = el.dataset.text || el.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(`vcopy-${key}`);
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+  });
+}
+</script>
+</body>
+</html>
