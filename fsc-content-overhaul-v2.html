@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christin's Content Overhaul</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1C1C14;
+    --olive: #4A4A2E;
+    --olive-mid: #5C5C3D;
+    --taupe: #B8AC9A;
+    --sand: #D4C9B5;
+    --cream: #F2EDE4;
+    --gold: #C4A06A;
+    --gold-light: #D9BC8E;
+    --rust: #7A3B1E;
+    --green: #6BBF8E;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #13130E;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--cream);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--ink);
+    border-bottom: 1px solid rgba(196,160,106,0.15);
+    padding: 20px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--cream);
+  }
+
+  header h1 span { color: var(--gold); font-style: italic; }
+
+  .header-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    border: 1px solid rgba(184,172,154,0.25);
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 28px 100px;
+  }
+
+  .section-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .section-eyebrow::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-eyebrow span {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 32px;
+    line-height: 1.15;
+  }
+
+  .section-title em { font-style: italic; color: var(--gold-light); }
+
+  /* POSITIONING NOTE */
+  .positioning-note {
+    background: rgba(196,160,106,0.08);
+    border: 1px solid rgba(196,160,106,0.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .note-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .note-text {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--sand);
+  }
+
+  .note-text strong {
+    color: var(--gold);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* BIO CARDS */
+  .bio-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 64px;
+  }
+
+  .bio-card {
+    background: var(--ink);
+    border: 1px solid rgba(184,172,154,0.12);
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .bio-card.visible { opacity: 1; transform: translateY(0); }
+
+  .bio-card-header {
+    background: rgba(255,255,255,0.03);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(184,172,154,0.08);
+  }
+
+  .bio-version {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .bio-tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    background: rgba(184,172,154,0.08);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .bio-body {
+    padding: 24px 22px;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+
+  .ig-preview {
+    flex-shrink: 0;
+    width: 220px;
+    background: #000;
+    border-radius: 10px;
+    padding: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .ig-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .ig-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C4A06A, #7A3B1E);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: white;
+    font-weight: 600;
+  }
+
+  .ig-handle { font-size: 0.75rem; font-weight: 600; color: white; }
+
+  .ig-bio-text {
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: #e0e0e0;
+    white-space: pre-line;
+  }
+
+  .ig-link { font-size: 0.7rem; color: #88B7E0; margin-top: 6px; }
+
+  .bio-analysis { flex: 1; }
+
+  .analysis-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--olive-mid);
+    margin-bottom: 10px;
+    margin-top: 16px;
+  }
+
+  .analysis-label:first-child { margin-top: 0; }
+
+  .analysis-text {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--sand);
+  }
+
+  .pro-con-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+
+  .pro-tag {
+    font-size: 0.72rem;
+    background: rgba(107,191,142,0.12);
+    color: var(--green);
+    border: 1px solid rgba(107,191,142,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .watch-tag {
+    font-size: 0.72rem;
+    background: rgba(196,160,106,0.1);
+    color: var(--gold);
+    border: 1px solid rgba(196,160,106,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .bio-footer {
+    padding: 12px 22px;
+    border-top: 1px solid rgba(184,172,154,0.07);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid rgba(184,172,154,0.2);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: rgba(196,160,106,0.1); color: var(--gold); border-color: var(--gold); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+  .recommend-badge {
+    margin-left: auto;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .recommend-badge::before { content: '★'; }
+
+  /* PILLARS */
+  .pillars-section { margin-bottom: 64px; }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .pillar-card {
+    background: var(--ink);
+    border: 1px solid rgba(184,172,154,0.1);
+    border-radius: 10px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .pillar-card.visible { opacity: 1; transform: translateY(0); }
+
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .pillar-card:hover::before { transform: scaleX(1); }
+
+  .pillar-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    color: rgba(196,160,106,0.15);
+    font-style: italic;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .pillar-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--cream);
+    margin-bottom: 10px;
+  }
+
+  .pillar-desc {
+    font-size: 0.83rem;
+    line-height: 1.7;
+    color: var(--taupe);
+    margin-bottom: 16px;
+  }
+
+  .pillar-ideas {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pillar-ideas li {
+    font-size: 0.78rem;
+    color: var(--sand);
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .pillar-ideas li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.7rem;
+  }
+
+  /* CALENDAR */
+  .calendar-section { margin-bottom: 64px; }
+
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .day-card {
+    background: var(--ink);
+    border: 1px solid rgba(184,172,154,0.1);
+    border-radius: 8px;
+    padding: 18px 16px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .day-card.visible { opacity: 1; transform: translateY(0); }
+
+  .day-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .day-type {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .day-desc {
+    font-size: 0.78rem;
+    color: var(--taupe);
+    line-height: 1.55;
+  }
+
+  .day-platform {
+    margin-top: 10px;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--olive-mid);
+  }
+
+  /* RULES */
+  .rules-section { margin-bottom: 64px; }
+
+  .rules-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(184,172,154,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .rule-item {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    border-bottom: 1px solid rgba(184,172,154,0.08);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .rule-item:last-child { border-bottom: none; }
+  .rule-item.visible { opacity: 1; transform: translateY(0); }
+
+  .rule-num {
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--gold);
+    font-style: italic;
+    border-right: 1px solid rgba(184,172,154,0.08);
+  }
+
+  .rule-content {
+    padding: 18px 22px;
+    background: var(--ink);
+  }
+
+  .rule-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .rule-desc {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--taupe);
+  }
+
+  /* CAPTION GENERATOR */
+  .gen-section {
+    background: var(--olive);
+    border-radius: 12px;
+    padding: 36px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gen-section::before {
+    content: 'FSC';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14rem;
+    color: rgba(0,0,0,0.1);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .gen-section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: var(--cream);
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .gen-section h3 em { font-style: italic; color: var(--gold-light); }
+
+  .gen-section p {
+    font-size: 0.88rem;
+    color: rgba(242,237,228,0.65);
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .caption-type-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .type-btn {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(184,172,154,0.2);
+    border-radius: 20px;
+    padding: 7px 16px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--taupe);
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .type-btn.active { background: var(--ink); color: var(--cream); border-color: var(--gold); }
+
+  .gen-btn {
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    border-radius: 6px;
+    padding: 13px 32px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .gen-btn:hover { background: var(--gold-light); }
+  .gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .caption-output {
+    margin-top: 24px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+    display: none;
+    position: relative;
+  }
+
+  .caption-output.show { display: block; }
+
+  .caption-text {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--sand);
+    white-space: pre-wrap;
+  }
+
+  .caption-copy {
+    margin-top: 14px;
+    background: transparent;
+    border: 1px solid rgba(184,172,154,0.25);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .caption-copy:hover { color: var(--gold); border-color: var(--gold); }
+
+  .dots {
+    display: inline-flex;
+    gap: 4px;
+    vertical-align: middle;
+  }
+
+  .dots span {
+    width: 5px; height: 5px;
+    background: var(--ink);
+    border-radius: 50%;
+    animation: bounce 1.1s infinite;
+  }
+
+  .dots span:nth-child(2) { animation-delay: 0.18s; }
+  .dots span:nth-child(3) { animation-delay: 0.36s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+    40% { transform: translateY(-5px); opacity: 1; }
+  }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 700px) {
+    .bio-body { flex-direction: column; }
+    .ig-preview { width: 100%; }
+    .pillars-grid { grid-template-columns: 1fr; }
+    .week-grid { grid-template-columns: 1fr 1fr; }
+    header { padding: 16px 20px; }
+    .main { padding: 32px 16px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Content <span>Overhaul</span></h1>
+  <div class="header-tag">@christin_fisher</div>
+</header>
+
+<div class="main">
+
+  <!-- POSITIONING NOTE -->
+  <div class="positioning-note reveal">
+    <div class="note-icon">◈</div>
+    <div class="note-text">
+      <strong>Your positioning: Experience, not expertise claims</strong>
+      Everything here is written from your lane — a decade of coaching women 35+, your own lived experience at 52, and what you've observed in real clients over real time. No hormone certifications implied. No clinical claims. Just an honest, experienced coach who gets it because she's in it.
+    </div>
+  </div>
+
+  <!-- BIO OPTIONS -->
+  <div style="margin-bottom:64px">
+    <div class="section-eyebrow reveal"><span>Step 01</span></div>
+    <div class="section-title reveal">Three bio options. <em>Pick your favorite.</em></div>
+
+    <div class="bio-grid">
+
+      <!-- BIO A -->
+      <div class="bio-card">
+        <div class="bio-card-header">
+          <span class="bio-version">Version A</span>
+          <span class="bio-tag">Warm + Relatable</span>
+        </div>
+        <div class="bio-body">
+          <div class="ig-preview">
+            <div class="ig-name-row">
+              <div class="ig-avatar">CF</div>
+              <div><div class="ig-handle">christin_fisher</div></div>
+            </div>
+            <div class="ig-bio-text">Christin | Women's Strength Coach 35+
+I'm 52, I train hard & I coach what I live 🏋️
+Strength · Body comp · Feeling like yourself again
+10+ years working with women in the thick of it
+👇 Follow for free weekly training tips</div>
+            <div class="ig-link">🔗 christinfisher.com</div>
+          </div>
+          <div class="bio-analysis">
+            <div class="analysis-label">Why it works</div>
+            <div class="analysis-text">"I coach what I live" is the whole positioning in four words. No certification implied — just lived credibility. "In the thick of it" speaks directly to your client without naming a clinical condition.</div>
+            <div class="analysis-label">Strengths</div>
+            <div class="pro-con-row">
+              <span class="pro-tag">Lived experience framing</span>
+              <span class="pro-tag">No overclaiming</span>
+              <span class="pro-tag">Warm & real</span>
+            </div>
+          </div>
+        </div>
+        <div class="bio-footer">
+          <button class="copy-btn" onclick="copyBio(this, `Christin | Women's Strength Coach 35+\nI'm 52, I train hard & I coach what I live 🏋️\nStrength · Body comp · Feeling like yourself again\n10+ years working with women in the thick of it\n👇 Follow for free weekly training tips`)">Copy Bio</button>
+        </div>
+      </div>
+
+      <!-- BIO B -->
+      <div class="bio-card">
+        <div class="bio-card-header">
+          <span class="bio-version">Version B</span>
+          <span class="bio-tag">Personality Forward</span>
+        </div>
+        <div class="bio-body">
+          <div class="ig-preview">
+            <div class="ig-name-row">
+              <div class="ig-avatar">CF</div>
+              <div><div class="ig-handle">christin_fisher</div></div>
+            </div>
+            <div class="ig-bio-text">Christin | Strength Coach for Women 35+
+52 years old. Still lifting. Not slowing down. 🏋️
+I've spent 10 years coaching women through this season
+Strength · Muscle · Getting your body back
+👇 Follow — I share everything I know for free</div>
+            <div class="ig-link">🔗 christinfisher.com</div>
+          </div>
+          <div class="bio-analysis">
+            <div class="analysis-label">Why it works</div>
+            <div class="analysis-text">"Still lifting. Not slowing down." is punchy, funny, and tells the whole story. "This season" is intentionally broad — speaks to everyone without clinical language. The CTA is low-friction and generous.</div>
+            <div class="analysis-label">Strengths</div>
+            <div class="pro-con-row">
+              <span class="pro-tag">Most personality</span>
+              <span class="pro-tag">Funny & memorable</span>
+              <span class="pro-tag">Generous CTA</span>
+            </div>
+          </div>
+        </div>
+        <div class="bio-footer">
+          <button class="copy-btn" onclick="copyBio(this, `Christin | Strength Coach for Women 35+\n52 years old. Still lifting. Not slowing down. 🏋️\nI've spent 10 years coaching women through this season\nStrength · Muscle · Getting your body back\n👇 Follow — I share everything I know for free`)">Copy Bio</button>
+          <span class="recommend-badge">Recommended</span>
+        </div>
+      </div>
+
+      <!-- BIO C -->
+      <div class="bio-card">
+        <div class="bio-card-header">
+          <span class="bio-version">Version C</span>
+          <span class="bio-tag">Results Focused</span>
+        </div>
+        <div class="bio-body">
+          <div class="ig-preview">
+            <div class="ig-name-row">
+              <div class="ig-avatar">CF</div>
+              <div><div class="ig-handle">christin_fisher</div></div>
+            </div>
+            <div class="ig-bio-text">Christin Fisher | Women's Strength Coach
+Helping women 35+ build real strength & feel like themselves again
+10 years · Hundreds of women · I'm one of them
+No crash diets. No programs that ignore your life.
+👇 Free training tips every week</div>
+            <div class="ig-link">🔗 christinfisher.com</div>
+          </div>
+          <div class="bio-analysis">
+            <div class="analysis-label">Why it works</div>
+            <div class="analysis-text">"Feel like themselves again" is the emotional bullseye for your avatar. "I'm one of them" is the most powerful credibility claim you have — and it's completely true. Clean, results-oriented, no overclaiming anywhere.</div>
+            <div class="analysis-label">Strengths</div>
+            <div class="pro-con-row">
+              <span class="pro-tag">Emotional hook</span>
+              <span class="pro-tag">Strong credibility</span>
+              <span class="pro-tag">Clean & clear</span>
+            </div>
+          </div>
+        </div>
+        <div class="bio-footer">
+          <button class="copy-btn" onclick="copyBio(this, `Christin Fisher | Women's Strength Coach\nHelping women 35+ build real strength & feel like themselves again\n10 years · Hundreds of women · I'm one of them\nNo crash diets. No programs that ignore your life.\n👇 Free training tips every week`)">Copy Bio</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTENT PILLARS -->
+  <div class="pillars-section">
+    <div class="section-eyebrow reveal"><span>Step 02</span></div>
+    <div class="section-title reveal">Your three content pillars. <em>Own all of them.</em></div>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-num">01</div>
+        <div class="pillar-name">Strength & The Work</div>
+        <div class="pillar-desc">Show the lifting. Your training, your clients' progress, the methodology behind it. Make heavy feel possible.</div>
+        <ul class="pillar-ideas">
+          <li>My own training week — what it actually looks like</li>
+          <li>Why women 35+ should lift heavier, not lighter</li>
+          <li>Hip thrust progression — from nervous to 225 lbs</li>
+          <li>The exercises I'll never skip and why</li>
+          <li>What I've noticed changes after 50 in the gym</li>
+        </ul>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">02</div>
+        <div class="pillar-name">This Season of Life</div>
+        <div class="pillar-desc">Your experience as a woman in her 50s who trains seriously. No clinical claims — just real talk about what you've lived and observed over a decade of coaching.</div>
+        <ul class="pillar-ideas">
+          <li>What I've noticed in my own body as I train in my 50s</li>
+          <li>Why the programs that worked at 30 stopped working</li>
+          <li>What my clients tell me changed — and what helped</li>
+          <li>Recovery looks different now. Here's what I do.</li>
+          <li>Things I wish someone had told me at 40</li>
+        </ul>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">03</div>
+        <div class="pillar-name">Body Recomposition & Results</div>
+        <div class="pillar-desc">The outcome your audience actually wants. Tie it to real work, not shortcuts. Your clients' transformations and your own are the proof.</div>
+        <ul class="pillar-ideas">
+          <li>Why the scale is lying to you right now</li>
+          <li>What body comp actually looks like after 50</li>
+          <li>Protein — how much you actually need and why</li>
+          <li>Client win: what changed and what we did</li>
+          <li>Recomp without misery — what my clients eat</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT CALENDAR -->
+  <div class="calendar-section">
+    <div class="section-eyebrow reveal"><span>Step 03</span></div>
+    <div class="section-title reveal">Your weekly rhythm. <em>Sustainable by design.</em></div>
+
+    <div class="week-grid">
+      <div class="day-card">
+        <div class="day-label">Monday</div>
+        <div class="day-type">Education Reel</div>
+        <div class="day-desc">Teach one thing about training or body comp. Scroll-stopping hook, one idea, done.</div>
+        <div class="day-platform">Instagram + TikTok</div>
+      </div>
+      <div class="day-card">
+        <div class="day-label">Wednesday</div>
+        <div class="day-type">Real Talk / POV</div>
+        <div class="day-desc">Your opinion. A myth bust. Something you see women getting wrong. This is where your personality builds the audience.</div>
+        <div class="day-platform">TikTok first, repurpose to IG</div>
+      </div>
+      <div class="day-card">
+        <div class="day-label">Friday</div>
+        <div class="day-type">Proof / Results</div>
+        <div class="day-desc">Your training, a client win, a before/after in mindset or physical progress. Makes everything real.</div>
+        <div class="day-platform">Instagram Carousel or Reel</div>
+      </div>
+      <div class="day-card">
+        <div class="day-label">Sunday</div>
+        <div class="day-type">Personal / Real Life</div>
+        <div class="day-desc">You as a human. Training, Olivia, Harper, something small that happened. This builds more trust than any educational post.</div>
+        <div class="day-platform">Stories + optional Reel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULES -->
+  <div class="rules-section">
+    <div class="section-eyebrow reveal"><span>Step 04</span></div>
+    <div class="section-title reveal">Five non-negotiables. <em>The rules that make it stick.</em></div>
+
+    <div class="rules-list">
+      <div class="rule-item">
+        <div class="rule-num">1</div>
+        <div class="rule-content">
+          <div class="rule-title">Speak from experience, not authority</div>
+          <div class="rule-desc">"Here's what I've noticed" and "In 10 years of coaching" are more powerful than any certification. Your lived experience IS the credential. Lead with it every time.</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">2</div>
+        <div class="rule-content">
+          <div class="rule-title">Hook in the first 2 seconds or 2 words</div>
+          <div class="rule-desc">Every reel, every caption. Write the hook last, after you know the point. If it doesn't stop the scroll in the first line, it doesn't matter what comes after.</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">3</div>
+        <div class="rule-content">
+          <div class="rule-title">One post, one idea</div>
+          <div class="rule-desc">You don't have to say everything every time. Pick one thing and say it well. The urge to over-explain is what makes posts feel like homework — for you and the reader.</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">4</div>
+        <div class="rule-content">
+          <div class="rule-title">Voice note to caption — always</div>
+          <div class="rule-desc">You think better out loud. Voice note your idea, drop the transcript into the generator below, and let Claude clean it up in your voice. Your raw voice is the asset.</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">5</div>
+        <div class="rule-content">
+          <div class="rule-title">Done beats perfect every time</div>
+          <div class="rule-desc">Your most viral content will be the one you almost didn't post. The 52nd birthday TikTok wasn't perfectly planned. Consistency compounds. Post it anyway.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPTION GENERATOR -->
+  <div class="gen-section">
+    <h3>Generate a caption <em>right now.</em></h3>
+    <p>Pick a post type. Claude writes it in your voice — from experience, never overclaiming.</p>
+
+    <div class="caption-type-row">
+      <button class="type-btn active" onclick="setType(this, 'education')">Education</button>
+      <button class="type-btn" onclick="setType(this, 'realtalk')">Real Talk</button>
+      <button class="type-btn" onclick="setType(this, 'proof')">Results</button>
+      <button class="type-btn" onclick="setType(this, 'personal')">Personal</button>
+    </div>
+
+    <button class="gen-btn" id="capBtn" onclick="generateCaption()">✦ Write My Caption</button>
+
+    <div class="caption-output" id="captionOut">
+      <div class="caption-text" id="captionText"></div>
+      <button class="caption-copy" onclick="copyCaption()">Copy Caption</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentType = 'education';
+
+function setType(btn, type) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentType = type;
+  document.getElementById('captionOut').classList.remove('show');
+}
+
+async function generateCaption() {
+  const btn = document.getElementById('capBtn');
+  const out = document.getElementById('captionOut');
+  const text = document.getElementById('captionText');
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+  out.classList.remove('show');
+
+  const prompts = {
+    education: `Write an Instagram/TikTok caption for Christin teaching one practical thing about strength training or body composition for women 35+. She speaks from 10 years of coaching experience and her own training at 52 — never from clinical expertise. No hormone certification language. Phrases like "what I've noticed," "in my experience," "what I've seen work" are perfect. Hook must stop the scroll. End with a question. 80-120 words. No hashtags.`,
+
+    realtalk: `Write a real-talk POV caption for Christin Fisher — a 52-year-old strength coach who has spent 10 years coaching women 35+. She's sharing an opinion or myth bust about fitness for women in this season of life. She speaks from experience, not clinical training. Confident, warm, a little funny. No hormone expertise claims — just honest coaching observations. End with a CTA to follow. 80-120 words. No hashtags.`,
+
+    proof: `Write an Instagram caption for Christin sharing either a client win or her own training progress. Keep it grounded — no hype. Focus on what changed, what the work looked like, and what made the difference. Her voice: warm, proud but real. Connect the result to something the reader wants without overclaiming. 80-120 words. No hashtags.`,
+
+    personal: `Write a personal/behind-the-scenes Instagram caption for Christin Fisher. She's a solo parent to a teenager named Olivia, trains in her home gym, has a white staffy named Harper. Something small and real that shows her as a human. Warm, a little funny, zero performance energy. End with a line that makes the reader feel seen or smile. 80-120 words. No hashtags.`
+  };
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: `You write social media captions for Christin Fisher, certified personal trainer and founder of Feminine Strength Co. She coaches women 35+ in strength training and body recomposition. She's 52 and trains seriously herself. Her voice is warm, direct, real-talk, occasionally funny. CRITICAL: She speaks from lived experience and 10 years of coaching observation — never from clinical or hormone expertise. Never use phrases like "hormone-informed," "cycle-synced," or anything implying medical/hormone certification. Use phrases like "what I've noticed," "in my experience," "what I've seen work with my clients." No hashtags. Write like she's talking to a friend.`,
+        messages: [{ role: "user", content: prompts[currentType] }]
+      })
+    });
+    const data = await res.json();
+    text.textContent = data.content[0].text;
+    out.classList.add('show');
+  } catch {
+    text.textContent = "Something went wrong — try again.";
+    out.classList.add('show');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✦ Write My Caption';
+}
+
+function copyCaption() {
+  const t = document.getElementById('captionText').textContent;
+  navigator.clipboard.writeText(t);
+  const btn = event.target;
+  btn.textContent = '✓ Copied';
+  setTimeout(() => btn.textContent = 'Copy Caption', 1800);
+}
+
+function copyBio(btn, text) {
+  navigator.clipboard.writeText(text);
+  btn.textContent = '✓ Copied';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = 'Copy Bio'; btn.classList.remove('copied'); }, 1800);
+}
+
+const reveals = document.querySelectorAll('.reveal, .bio-card, .pillar-card, .day-card, .rule-item');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
